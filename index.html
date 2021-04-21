@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <link rel="stylesheet" href="./style.css"> -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies & Bitcoin</title>
+</head>
+<style>
+    #navLinks {
+    color: dodgerblue;
+    cursor: pointer;
+}
+
+#header {
+    display: flex;
+    justify-content: space-evenly;
+    border: solid 2px black;
+    margin-bottom: 100px;
+}
+
+#articles:nth-child(2) {
+    margin-right: 100px;
+    margin-left: 100px;
+    border: solid 2px black;
+    display: block;
+    text-align: center;    
+}
+
+#myBtn {
+    display: inline-block;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#sections {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+ol {
+    list-style: inside square;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border: solid 2px black;
+}
+</style>
+<body>
+    <div>
+        <header id="header">
+        </header>
+        <article id="articles">
+        </article>
+        <section id="sections">
+        </section>
+        <ol id="list">
+        </ol>
+    </div>
+
+
+
+    <script>
+        // helper function to set mutliple attributes //
+const setAttributes = (element, attributes) => {
+    for(let key in attributes) {
+        element.setAttribute(key,attributes[key]);
+    }
+}
+let title = document.createElement("p")
+title.setAttribute("id", "navLinks");
+//header //
+//we are creating nodes in the dom via javascript// 
+const texts = ["Home", "Login", "Best"];
+texts.forEach((el) => {
+    let title = document.createElement("p")
+    title.setAttribute("id", "navLinks");
+    title.innerHTML = el;
+    header.append(title);
+})
+// body //
+let articles = document.getElementById("articles");
+let div1 = document.createElement("h1");
+let articleTitle1 = document.createTextNode("Bitcoin going to new places!")
+let articleOne = document.createTextNode("Since 2017, it wasn't a matter of 'if', but rather 'when'. Over the past year Bitcoin has been exploding with all the rage about Bitcoin let's see how it holds up to traditional stocks.");
+div1.setAttribute("id", "article1");
+div1.append(articleTitle1);
+articles.append(div1);
+let div2 = document.createElement("div");
+div2.setAttribute("id", "articleBody")
+div2.append(articleOne);
+articles.append(div2);
+
+//button //
+let buttonOne = document.createElement("button")
+let buttonOneText = document.createTextNode("Click here to get the current price of bitcoin!");
+buttonOne.append(buttonOneText)
+setAttributes(buttonOne, {"onclick":"getBPI()", "id":"myBtn"})
+
+articles.append(buttonOne)
+
+function helloLOL() {
+    alert("lol")
+}
+
+const bigTitles = ["Bitcoin To the Moon!", "Jake Paul Knocks out Ben Askren in First Round", "Are We Going to Hit Mars Sooner Than Later?", "Don't Wanna Study?"];
+const descriptions = ["Since 2017, it wasn't a matter of if, but rather when. Over the past year Bitcoin has been exploding with all the rage about Bitcoin let's see how it holds up to traditional stocks.", "Jake Paul former Youtube sensation has managed to knockout former UFC fighter Ben Askren in the first round. How did that happen? Click here to find out more", "Tesla and SpaceX CEO Elon Musk is planning his journey into the wild with the help of his loyal crew. Click here to find out more", "Use these simple study tricks to get workflow and productivitiy lined up with your needs."];
+
+bigTitles.forEach((title, index) => {
+    let titles = document.createElement("h1");
+    console.log(title)
+    titles.innerHTML = title
+    articles.append(titles);
+    articles.append(descriptions[index])
+})
+
+const section = document.getElementById("sections");
+let inputBox = document.createElement("input");
+let inputSubmit = document.createElement("button")
+let buttontext = document.createTextNode("Add a Movie!")
+inputSubmit.append(buttontext)
+setAttributes(inputBox, {"type": "text", "placeholder": "Enter a name here!", "id":"box"})
+setAttributes(inputSubmit, {"type": "submit", "value": "Add Movie", "id": "submitBox"})
+section.append(inputBox, inputSubmit);
+
+let ol = document.getElementById("list")
+let listHeading = document.createElement("h1");
+let listDes = document.createTextNode(`My Favorite Movies`)
+listHeading.append(listDes)
+ol.append(listHeading)
+
+const movies = []
+
+inputSubmit.addEventListener("click", (e) => {
+    e.preventDefault();
+    let movieList = new Object();
+    movieList.movie = inputBox.value;
+    if(inputBox.value === ""){
+        alert("must enter something!")
+        return null;
+    }
+    if(movies.indexOf(movieList.movie)== -1) {
+        movies.push(movieList.movie);
+        let ol = document.getElementById("list")    
+        let list =  document.createElement("li")
+        let listText = document.createTextNode(inputBox.value)
+        list.appendChild(listText)
+        ol.append(list)
+    }
+    else {
+        alert("duplication found")
+    }
+})
+
+async function getBPI() {
+    try{
+    const res = await fetch("https://cors-anywhere.herokuapp.com/https://api.coindesk.com/v1/bpi/currentprice.json", {
+        method: 'GET',
+        headers: {
+        
+        "Content-Type":"application/json",
+        }
+    })
+    //Put it into json //
+    var data = await res.json();
+    console.log(data)
+    let btcPrice = data.bpi.USD.rate;
+    console.log(btcPrice)
+    let bitcoinElement = document.createElement("h1");
+    let btcNode = document.createTextNode(btcPrice);
+    let theDate = new Date().toString();
+    bitcoinElement.append("$",btcNode," on ", theDate);
+    div2.append(bitcoinElement)
+  
+
+    
+    } catch(err){
+        console.log("Uh-oh, error!" + err)
+    }
+}
+
+
+    </script>
+</body>
+</html>
